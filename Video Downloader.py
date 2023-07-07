@@ -16,6 +16,12 @@ def download():
     print('Downloading...')
     mp4 = YouTube(video_path).streams.get_highest_resolution().download()
     video_clip = VideoFileClip(mp4)
+    # code for mp3
+    audio_file = video_clip.audio
+    audio_file.write_audiofile('audio.mp3')
+    audio_file.close()
+    shutil.move('audio.mp3', file_path)
+    # Code for mp3
     video_clip.close()
     shutil.move(mp4, file_path)
     print('Download Complete')
