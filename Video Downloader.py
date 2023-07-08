@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import filedialog
+import pytube
 from pytube import YouTube
 from moviepy.editor import *
 import youtube_dl
@@ -15,8 +16,11 @@ def download():
     video_path = url_entry.get()
     file_path = path_label.cget("text")
     print('Downloading...')
-    mp4 = YouTube(video_path).streams.get_highest_resolution().download()
-    video_clip = VideoFileClip(mp4)
+    ydl_opts = {'outtmpl': f'{file_path}/%(title)s.%(ext)s'}
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([video_path])
+    # mp4 = YouTube(video_path).streams.get_highest_resolution().download()
+    video_clip = VideoFileClip(ydl)
     # code for mp3
     # audio_file = video_clip.audio
     # audio_file.write_audiofile('audio.mp3')
@@ -24,7 +28,7 @@ def download():
     # shutil.move('audio.mp3', file_path)
     # Code for mp3
     video_clip.close()
-    shutil.move(mp4, file_path)
+    shutil.move(ydl, file_path)
     print('Download Complete')
 
 
